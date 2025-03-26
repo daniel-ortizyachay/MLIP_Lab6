@@ -1,10 +1,14 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:latest'
+        }
+    }
 
     stages {
         stage('Build Docker Image') {
             steps {
-                sh '''#!/bin/bash
+                sh '''
                 echo "Building Docker image with Conda..."
                 docker build -t mlip-lab6-conda -f Dockerfile .
                 '''
@@ -12,7 +16,7 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                sh '''#!/bin/bash
+                sh '''
                 echo "Running tests inside Docker container with Conda..."
                 docker run --rm mlip-lab6-conda bash -c "
                     source /opt/conda/bin/activate mlip && pytest
